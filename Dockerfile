@@ -11,8 +11,8 @@ RUN pip install -r requirements.txt
 COPY ./ ./
 
 # Expone el puerto 8001 para que pueda ser accedido desde el host
-EXPOSE 8001
+EXPOSE 5000
 
 
 # Inicia el servidor de desarrollo de Django
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:5000"]
