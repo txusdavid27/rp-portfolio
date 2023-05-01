@@ -1,28 +1,32 @@
 pipeline {
-  agent any
-
-  stages {
-    stage('Build') {
-      steps {
-        // Descargar el proyecto desde el repositorio
-        git 'https://github.com/txusdavid27/devOpsPractice.git'
-
-        // Construir la imagen del contenedor
-        sh 'docker build -t myapp .'
-      }
+    agent {
+        docker {
+            image 'mark77_django:latest'
+            args '-p 8000:8000'
+        }
     }
-    stage('Lint') {
-      steps {
-        // Ejecutar el linter pylint sobre el proyecto completo
-        sh 'pylint devOpsPractice'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/txusdavid27/rp-portfolio.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Lint') {
+            steps {
+                sh 'pip install pylint'
+                sh 'pylint <nombre_del_proyecto>'
+            }
+        }
+        stage('Build and Deploy') {
+            steps {
+                sh 'docker build -t <nombre_de_la_imagen> .'
+                sh 'docker run -d --name <nombre_del_contenedor> -p 8000:8000 <nombre_de_la_imagen>'
+            }
+        }
     }
-    stage('Deploy') {
-      steps {
-        // Desplegar la aplicación en un contenedor independiente
-        sh 'docker run -d -p 5000:5000 myapp'
-      }
-    }
-  }
 }
-
